@@ -1,0 +1,78 @@
+<!--
+ Earthquake-status-report
+ 
+ Overpass-turbo script to report on earthquake damages as saved in OpenStreetMap.
+ Color buildings  according to the damage scale tags agreed for the Rieti (Italy) earthquake. 
+
+[Version 1.0]
+Very first version. The script is derived from that used for the building status visualiszation
+of the damafe of the Haiyan typhoon (See Readme)
+
+Author: FabC (fabrizio.carrai@gmail.com)
+ -->
+<osm-script output="json"> 
+  <query type="way">
+	<has-kv k="building"/>
+	<bbox-query {{bbox}}/>
+  </query>
+  <print mode="body"/>
+  <recurse type="down"/>
+  <print mode="skeleton"/>
+ 
+  <query type="way">
+	<has-kv k="status"/>
+	<bbox-query {{bbox}}/>
+  </query>
+  <print mode="body"/> 
+  <recurse type="down"/>
+  <print mode="skeleton"/>
+ 
+  <query type="way">
+	<has-kv k="landuse" v="brownfield" />
+	<has-kv k="earthquake:damage" v="yes" />
+	<bbox-query {{bbox}}/>
+  </query>
+  <print mode="body"/> 
+  <recurse type="down"/>
+  <print mode="skeleton"/>
+ 
+  <query type="node">
+	<has-kv k="barrier" v="debris"/>
+	<bbox-query {{bbox}}/>
+  </query>
+  <print mode="body"/> 
+  <recurse type="down"/>
+  <print mode="skeleton"/>
+ 
+  <query type="way">
+	<has-kv k="earthquake:reviewed"/>
+	<bbox-query {{bbox}}/>
+  </query>
+  <print mode="body"/> 
+  <recurse type="down"/>
+  <print mode="skeleton"/>
+</osm-script>
+ 
+{{style:
+
+way[building]
+{ color:blue; fill-color:blue;opacity:0.4;
+  fill-opacity:0.4;}
+
+way[earthquake:damage=collapsed]
+{ color:Yellow; fill-color:darkred;width:1;
+  dashes:5,5;opacity:1;fill-opacity:0.8;}
+
+way[earthquake:damage=severe]
+{ color:Yellow; fill-color:red;width:1;
+  dashes:5,5;opacity:1;fill-opacity:0.8;}
+
+way[earthquake:damage=moderate]
+{ color:Yellow; fill-color:pink;width:1;
+  dashes:5,5;opacity:1;fill-opacity:0.8;}
+
+way[earthquake:damage=negligible]
+{ color:Yellow; fill-color:MistyRose;width:1;
+  dashes:5,5;opacity:1;fill-opacity:0.8;}
+
+}}
